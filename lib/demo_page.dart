@@ -222,7 +222,7 @@ class DemoPageState extends State<DemoPage> {
         }else{
           logNotify('end scroll index', '$currentAvatarIndex');
           logNotify('temp end scroll index', '$temp');
-
+          value = 0.0;
           currentAvatarIndex = temp;
           ///头/尾部 继续滑动会走这个方法
           logNotify('nothing', '-----');
