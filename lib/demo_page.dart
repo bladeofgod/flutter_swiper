@@ -165,19 +165,19 @@ class DemoPageState extends State<DemoPage> {
     debugPrint('current index $currentAvatarIndex');
     if(currentAvatarIndex % 2 == 0){
       debugPrint('up-----------------');
-      logNotify('margin top', '${marginMap[0]}');
+      logNotify('margin top   $value', '${marginMap[0]}');
       if(index % 2 == 0){
-        marginMap[index] = marginMap[index] - value.abs();
+        marginMap[index] = marginMap[index] - value.abs()/4;
       }else {
-        marginMap[index] = marginMap[index] + value.abs();
+        marginMap[index] = marginMap[index] + value.abs()/4;
       }
       return marginMap[index];
     }else{
       debugPrint('down-----------------');
       if(index % 2 == 0){
-        marginMap[index] = marginMap[index] + value.abs();
+        marginMap[index] = marginMap[index] + value.abs()/4;
       }else {
-        marginMap[index] = marginMap[index] - value.abs();
+        marginMap[index] = marginMap[index] - value.abs()/4;
       }
       return marginMap[index];
     }
