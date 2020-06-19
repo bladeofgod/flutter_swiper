@@ -55,6 +55,11 @@ class DemoPageState extends State<DemoPage> {
       logNotify('controller', 'scroll position  ${position.pixels}');
       avatarController.position.moveTo(position.pixels/4);
       value = position.pixels - lastPosition;
+      lastPosition = position.pixels;
+      setState(() {
+
+      });
+
 //      if(currentAvatarIndex% 2 == 0){
 //        value -= (position.pixels - lastPosition).abs();
 ////          topMarginTop -= (position.pixels - lastPosition).abs();
@@ -64,10 +69,7 @@ class DemoPageState extends State<DemoPage> {
 ////          topMarginTop += (position.pixels - lastPosition).abs();
 ////          belowMarginTop -= (position.pixels - lastPosition).abs();
 //      }
-      lastPosition = position.pixels;
-      setState(() {
 
-      });
       //avatarController.animateTo(position.pixels/4, duration: Duration(microseconds: 1), curve: Curves.ease);
       //double p = position.pixels;
 //      setState(() {
@@ -104,6 +106,9 @@ class DemoPageState extends State<DemoPage> {
         children: <Widget>[
           wrapWidgetWithNotify(PageView(
             controller: pageController,
+            onPageChanged: (index){
+              temp = index;
+            },
             children: List.generate(8, (index){
               return Column(
                 mainAxisSize: MainAxisSize.max,
@@ -128,7 +133,7 @@ class DemoPageState extends State<DemoPage> {
               controller: avatarController,
               onPageChanged: (index){
                 logNotify('pageview', '$index');
-                 temp = index;
+
 //                setState(() {
 //
 //                });
@@ -137,7 +142,7 @@ class DemoPageState extends State<DemoPage> {
 
                 return Column(
                   children: <Widget>[
-                    SizedBox(width: 1,height: geneHeight(index),),
+                    SizedBox(width: 1,height: geneHeight(index).abs(),),
                     Container(
                       width: MediaQuery.of(context).size.width/5,height: MediaQuery.of(context).size.width/5,
                       decoration: BoxDecoration(
@@ -169,6 +174,7 @@ class DemoPageState extends State<DemoPage> {
         return marginMap[index] - value.abs();
       }
     }
+
   }
 
   int temp = 0;
