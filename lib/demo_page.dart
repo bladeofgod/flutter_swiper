@@ -34,7 +34,9 @@ class DemoPageState extends State<DemoPage> {
 
   Map<int,double> marginMap = Map();
   //List<double> marginList ;
-  Map<int,Container> widgetMap = Map();
+  //Map<int,Container> widgetMap = Map();
+
+  double value = 0.0;
 
   @override
   void initState() {
@@ -52,18 +54,16 @@ class DemoPageState extends State<DemoPage> {
       ScrollPosition position = pageController.position;
       logNotify('controller', 'scroll position  ${position.pixels}');
       avatarController.position.moveTo(position.pixels/4);
-      marginMap.forEach((key, value) {
-        if((key - currentAvatarIndex).abs() % 2 == 0){
-          value -= (position.pixels - lastPosition).abs();
-//          topMarginTop -= (position.pixels - lastPosition).abs();
-//          belowMarginTop += (position.pixels - lastPosition).abs();
-        }else{
-          value += (position.pixels - lastPosition).abs();
-//          topMarginTop += (position.pixels - lastPosition).abs();
-//          belowMarginTop -= (position.pixels - lastPosition).abs();
-        }
-        debugPrint("margin value    $value");
-      });
+      value = position.pixels - lastPosition;
+//      if(currentAvatarIndex% 2 == 0){
+//        value -= (position.pixels - lastPosition).abs();
+////          topMarginTop -= (position.pixels - lastPosition).abs();
+////          belowMarginTop += (position.pixels - lastPosition).abs();
+//      }else{
+//        value += (position.pixels - lastPosition).abs();
+////          topMarginTop += (position.pixels - lastPosition).abs();
+////          belowMarginTop -= (position.pixels - lastPosition).abs();
+//      }
       lastPosition = position.pixels;
       setState(() {
 
@@ -102,7 +102,7 @@ class DemoPageState extends State<DemoPage> {
       width: size.width,height: size.height,
       child: Stack(
         children: <Widget>[
-          PageView(
+          wrapWidgetWithNotify(PageView(
             controller: pageController,
             children: List.generate(8, (index){
               return Column(
@@ -120,7 +120,7 @@ class DemoPageState extends State<DemoPage> {
                 ],
               );
             }),
-          ),
+          )),
           Container(
             //color: Colors.blue,
             width: size.width,height: 300,
@@ -128,16 +128,16 @@ class DemoPageState extends State<DemoPage> {
               controller: avatarController,
               onPageChanged: (index){
                 logNotify('pageview', '$index');
-                currentAvatarIndex = index;
+                 temp = index;
 //                setState(() {
 //
 //                });
               },
               children: List.generate(8, (index){
-                widgetMap[index] = Container(width: 1,height: marginMap[index],);
+
                 return Column(
                   children: <Widget>[
-                    widgetMap[index],
+                    SizedBox(width: 1,height: geneHeight(index),),
                     Container(
                       width: MediaQuery.of(context).size.width/5,height: MediaQuery.of(context).size.width/5,
                       decoration: BoxDecoration(
@@ -155,6 +155,23 @@ class DemoPageState extends State<DemoPage> {
     );
   }
 
+  double geneHeight(int index){
+    if(currentAvatarIndex % 2 == 0){
+      if(index % 2 == 0){
+        return marginMap[index] - value.abs();
+      }else {
+        return marginMap[index] + value.abs();
+      }
+    }else{
+      if(index % 2 == 0){
+        return marginMap[index] + value.abs();
+      }else {
+        return marginMap[index] - value.abs();
+      }
+    }
+  }
+
+  int temp = 0;
   int currentAvatarIndex = 0;
 
 //  double generateHeight(int index){
@@ -190,6 +207,9 @@ class DemoPageState extends State<DemoPage> {
 //          }
 
         }else{
+          logNotify('end scroll index', '$currentAvatarIndex');
+          logNotify('temp end scroll index', '$temp');
+          currentAvatarIndex = temp;
           ///头/尾部 继续滑动会走这个方法
           logNotify('nothing', '-----');
           //logNotify('scroll notification', info)
