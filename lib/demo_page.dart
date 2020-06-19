@@ -55,6 +55,7 @@ class DemoPageState extends State<DemoPage> {
       logNotify('controller', 'scroll position  ${position.pixels}');
       avatarController.position.moveTo(position.pixels/4);
       value = position.pixels - lastPosition;
+      debugPrint('distance value    ------$value');
       lastPosition = position.pixels;
       setState(() {
 
@@ -161,6 +162,7 @@ class DemoPageState extends State<DemoPage> {
   }
 
   double geneHeight(int index){
+    debugPrint('current index $currentAvatarIndex');
     if(currentAvatarIndex % 2 == 0){
       if(index % 2 == 0){
         return marginMap[index] - value.abs();
