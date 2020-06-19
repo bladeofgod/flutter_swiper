@@ -164,17 +164,22 @@ class DemoPageState extends State<DemoPage> {
   double geneHeight(int index){
     debugPrint('current index $currentAvatarIndex');
     if(currentAvatarIndex % 2 == 0){
+      debugPrint('up-----------------');
+      logNotify('margin top', '${marginMap[0]}');
       if(index % 2 == 0){
-        return marginMap[index] - value.abs();
+        marginMap[index] = marginMap[index] - value.abs();
       }else {
-        return marginMap[index] + value.abs();
+        marginMap[index] = marginMap[index] + value.abs();
       }
+      return marginMap[index];
     }else{
+      debugPrint('down-----------------');
       if(index % 2 == 0){
-        return marginMap[index] + value.abs();
+        marginMap[index] = marginMap[index] + value.abs();
       }else {
-        return marginMap[index] - value.abs();
+        marginMap[index] = marginMap[index] - value.abs();
       }
+      return marginMap[index];
     }
 
   }
@@ -217,6 +222,7 @@ class DemoPageState extends State<DemoPage> {
         }else{
           logNotify('end scroll index', '$currentAvatarIndex');
           logNotify('temp end scroll index', '$temp');
+
           currentAvatarIndex = temp;
           ///头/尾部 继续滑动会走这个方法
           logNotify('nothing', '-----');
