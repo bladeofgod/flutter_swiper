@@ -36,7 +36,10 @@ class DemoPageState extends State<DemoPage> {
   //List<double> marginList ;
   //Map<int,Container> widgetMap = Map();
 
-  double value = 0.0;
+  ///值更新
+  //double value = 0.0;
+  ///比例更新
+  double ratio = 0.0;
 
   @override
   void initState() {
@@ -53,10 +56,17 @@ class DemoPageState extends State<DemoPage> {
     pageController.addListener(() {
       ScrollPosition position = pageController.position;
       logNotify('controller', 'scroll position  ${position.pixels}');
+      //logNotify('base pos', 'info')
       avatarController.position.moveTo(position.pixels/4);
-      value = position.pixels - lastPosition;
-      debugPrint('distance value    ------$value');
-      lastPosition = position.pixels;
+      ///比例更新
+      logNotify('%', '${position.pixels%bottomSize}');
+      ratio = (position.pixels%bottomSize)/bottomSize;
+      logNotify('ratio', '$ratio');
+
+      ///值更新
+      //value = position.pixels - lastPosition;
+      //debugPrint('distance value    ------$value');
+      //lastPosition = position.pixels;
       setState(() {
 
       });
@@ -161,23 +171,30 @@ class DemoPageState extends State<DemoPage> {
     );
   }
 
+  final double flag = 100;
+
+  double checkValue(double value){
+    return value > 150 ? 150 : value;
+  }
+
   double geneHeight(int index){
+    //if(ratio < 0.001 || ratio > 1) return marginMap[index];
     debugPrint('current index $currentAvatarIndex');
     if(currentAvatarIndex % 2 == 0){
       debugPrint('up-----------------');
-      logNotify('margin top   $value', '${marginMap[0]}');
+      //logNotify('margin top   $value', '${marginMap[0]}');
       if(index % 2 == 0){
-        marginMap[index] = marginMap[index] - value.abs()/4;
+        marginMap[index] = checkValue(marginMap[index] - (flag*ratio));
       }else {
-        marginMap[index] = marginMap[index] + value.abs()/4;
+        marginMap[index] = checkValue(marginMap[index] + (flag*ratio));
       }
       return marginMap[index];
     }else{
       debugPrint('down-----------------');
       if(index % 2 == 0){
-        marginMap[index] = marginMap[index] + value.abs()/4;
+        marginMap[index] = checkValue(marginMap[index] + (flag*ratio));
       }else {
-        marginMap[index] = marginMap[index] - value.abs()/4;
+        marginMap[index] = checkValue(marginMap[index] - (flag*ratio));
       }
       return marginMap[index];
     }
@@ -222,7 +239,7 @@ class DemoPageState extends State<DemoPage> {
         }else{
           logNotify('end scroll index', '$currentAvatarIndex');
           logNotify('temp end scroll index', '$temp');
-          value = 0.0;
+          //value = 0.0;
           currentAvatarIndex = temp;
           ///头/尾部 继续滑动会走这个方法
           logNotify('nothing', '-----');
