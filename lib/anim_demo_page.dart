@@ -166,6 +166,8 @@ class AnimationPageState extends State<AnimationPage>
                       width:getWidth(index),
                       height:getWidth(index),
                       decoration: BoxDecoration(
+                        border:index == currentAvatarIndex?
+                        Border.all(color: Colors.blue,width: 4) : null,
                         shape: BoxShape.circle,
                         color: index%2 == 0 ? Colors.red : Colors.yellow,
                       ),
