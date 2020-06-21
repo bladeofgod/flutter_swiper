@@ -5,6 +5,12 @@
 
 import 'package:flutter/material.dart';
 
+enum SlideDirection{
+  LEFT,
+  RIGHT
+}
+
+
 class DemoPage extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
@@ -29,6 +35,7 @@ class DemoPageState extends State<DemoPage> {
 
   final double topSize = 98.1818;
   final double bottomSize = 392.7272;
+  final double distanceRatio = 100/392.7272;
 
   double lastPosition = 0.0;
 
@@ -37,9 +44,11 @@ class DemoPageState extends State<DemoPage> {
   //Map<int,Container> widgetMap = Map();
 
   ///值更新
-  //double value = 0.0;
+  double value = 0.0;
   ///比例更新
   double ratio = 0.0;
+
+  SlideDirection slideDirection = SlideDirection.RIGHT;
 
   @override
   void initState() {
@@ -60,13 +69,20 @@ class DemoPageState extends State<DemoPage> {
       avatarController.position.moveTo(position.pixels/4);
       ///比例更新
       logNotify('%', '${position.pixels%bottomSize}');
-      ratio = (position.pixels%bottomSize)/bottomSize;
-      logNotify('ratio', '$ratio');
+      //ratio = (position.pixels%bottomSize)/bottomSize;
+      //logNotify('ratio', '$ratio');
+      if(lastPosition <= position.pixels){
+        slideDirection = SlideDirection.RIGHT;
+      }else{
+        slideDirection = SlideDirection.LEFT;
+      }
 
       ///值更新
-      //value = position.pixels - lastPosition;
-      //debugPrint('distance value    ------$value');
-      //lastPosition = position.pixels;
+      value = ((position.pixels - lastPosition).abs()) * distanceRatio;
+      debugPrint('distance value    ------$value');
+      cal += value.abs();
+      logNotify('value sum', '$cal');
+      lastPosition = position.pixels;
       setState(() {
 
       });
@@ -153,7 +169,7 @@ class DemoPageState extends State<DemoPage> {
 
                 return Column(
                   children: <Widget>[
-                    SizedBox(width: 1,height: geneHeight(index).abs(),),
+                    SizedBox(width: 1,height: geneHeightByDirection(index).abs(),),
                     Container(
                       width: MediaQuery.of(context).size.width/5,height: MediaQuery.of(context).size.width/5,
                       decoration: BoxDecoration(
@@ -175,6 +191,28 @@ class DemoPageState extends State<DemoPage> {
 
   double checkValue(double value){
     return value > 150 ? 150 : value;
+  }
+  double cal = 0.0;
+  double geneHeightByDirection(int index){
+    logNotify('scroll direction ', '${slideDirection}');
+
+    if(slideDirection == SlideDirection.RIGHT){
+      logNotify('scroll direction ', '${slideDirection}');
+      if(index % 2 == 0){
+        marginMap[index] = marginMap[index] - value;
+      }else {
+        marginMap[index] = marginMap[index] + value;
+      }
+      return marginMap[index];
+    }else{
+      logNotify('scroll direction ', '${slideDirection}');
+      if(index % 2 == 0){
+        marginMap[index] = marginMap[index] + value;
+      }else {
+        marginMap[index] = marginMap[index] - value;
+      }
+      return marginMap[index];
+    }
   }
 
   double geneHeight(int index){
