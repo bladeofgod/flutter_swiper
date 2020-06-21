@@ -49,22 +49,22 @@ class AnimationPageState extends State<AnimationPage>
       ScrollPosition position = pageController.position;
       logNotify('controller', 'scroll position  ${position.pixels}');
       avatarController.position.moveTo(position.pixels/4);
-      if(scrollStatus != ScrollStatus.SLIDE){
-        //index = (position.pixels / bottomSize).floor();
-        return;
-      }
-      ratio = ((position.pixels % bottomSize) / bottomSize).abs();
-
-      logNotify('delta', '$delta');
-      logNotify('current index', '$currentAvatarIndex');
+//      if(scrollStatus != ScrollStatus.SLIDE){
+//        //index = (position.pixels / bottomSize).floor();
+//        return;
+//      }
+//      ratio = ((position.pixels % bottomSize) / bottomSize).abs();
+//
+//      logNotify('delta', '$delta');
+//      logNotify('current index', '$currentAvatarIndex');
       if(currentAvatarIndex % 2== 0){
-        logNotify('animation ', 'forward    -$ratio');
+        logNotify('animation ', 'forward    ');
         controller.forward();
         //controller.animateTo(ratio) ;
       }else{
-        logNotify('animation', 'backd    -$ratio');
+        logNotify('animation', 'backd   ');
         //controller.animateBack(ratio);
-        logNotify('sum', '${1-ratio}');
+        //logNotify('sum', '${1-ratio}');
         controller.reverse();
 //        controller.animateTo(ratio) ;
       }
@@ -79,6 +79,15 @@ class AnimationPageState extends State<AnimationPage>
       });
       lastPosition = position.pixels;
 
+    });
+
+
+    controller.addStatusListener((status) {
+//      if(status == AnimationStatus.dismissed){
+//        controller.forward();
+//      }
+    logNotify('animation value', '${controller.value}');
+      logNotify('animation status', '${status.toString()}');
     });
 
     avatarController.addListener(() {
