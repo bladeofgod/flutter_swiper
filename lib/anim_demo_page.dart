@@ -162,14 +162,22 @@ class AnimationPageState extends State<AnimationPage>
                 return Column(
                   children: <Widget>[
                     SizedBox(width: 1,height: index%2==0?begin150Anim.value : begin50Anim.value,),
-                    Container(
-                      width:getWidth(index),
-                      height:getWidth(index),
-                      decoration: BoxDecoration(
-                        border:index == currentAvatarIndex?
-                        Border.all(color: Colors.blue,width: 4) : null,
-                        shape: BoxShape.circle,
-                        color: index%2 == 0 ? Colors.red : Colors.yellow,
+                    GestureDetector(
+                      onTap: (){
+                        if(index != currentAvatarIndex){
+                          pageController.animateToPage(index, duration: Duration(milliseconds: 550)
+                              , curve: Curves.ease);
+                        }
+                      },
+                      child: Container(
+                        width:getWidth(index),
+                        height:getWidth(index),
+                        decoration: BoxDecoration(
+                          border:index == currentAvatarIndex?
+                          Border.all(color: Colors.blue,width: 4) : null,
+                          shape: BoxShape.circle,
+                          color: index%2 == 0 ? Colors.red : Colors.yellow,
+                        ),
                       ),
                     )
                   ],
@@ -237,6 +245,8 @@ class AnimationPageState extends State<AnimationPage>
 
         }else if(notification is ScrollEndNotification){
           scrollStatus = ScrollStatus.IDLE;
+          currentAvatarIndex = temp;
+          needReverse = controller.value == 1;
           ratio = 0.0;
           ///每个viewport的宽度
           logNotify('end', '${notification.metrics.pixels}');
@@ -259,8 +269,8 @@ class AnimationPageState extends State<AnimationPage>
 //          logNotify('end scroll index', '$currentAvatarIndex');
 //          logNotify('temp end scroll index', '$temp');
           //value = 0.0;
-          currentAvatarIndex = temp;
-          needReverse = controller.value == 1;
+//          currentAvatarIndex = temp;
+//          needReverse = controller.value == 1;
           ///头/尾部 继续滑动会走这个方法
           logNotify('nothing', '-----');
           //logNotify('scroll notification', info)
