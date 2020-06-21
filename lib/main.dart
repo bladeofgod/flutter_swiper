@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttercomplexswiper/anim_demo_page.dart';
 import 'package:fluttercomplexswiper/demo_page.dart';
 
 void main() {
@@ -27,7 +28,8 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: DemoPage(),
+      home: AnimationPage(),
+      //home: DemoPage(),
     );
   }
 }
