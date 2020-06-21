@@ -31,6 +31,10 @@ class AnimationPageState extends State<AnimationPage>
 
   double ratio = 0.0;
 
+  double delta;
+
+  //int index =0;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -45,25 +49,35 @@ class AnimationPageState extends State<AnimationPage>
       ScrollPosition position = pageController.position;
       logNotify('controller', 'scroll position  ${position.pixels}');
       avatarController.position.moveTo(position.pixels/4);
-      if(scrollStatus != ScrollStatus.SLIDE) return;
-      ratio = ((position.pixels % bottomSize) / bottomSize);
-      int index = (position.pixels % bottomSize).floor();
-      logNotify('ratio', '$ratio');
-//      if(lastPosition < position.pixels){
-//        index % 2== 0 ? controller.animateTo(ratio) : controller.animateTo(ratio);
-//      }else{
-//        index % 2== 0 ? controller.animateBack(ratio) : controller.animateBack(ratio);
-//      }
-      if(lastPosition < position.pixels){
-        index % 2== 0 ? controller.forward() : controller.reverse();
-      }else if(lastPosition > position.pixels){
-        index % 2== 0 ? controller.reverse() : controller.forward();
+      if(scrollStatus != ScrollStatus.SLIDE){
+        //index = (position.pixels / bottomSize).floor();
+        return;
       }
+      ratio = ((position.pixels % bottomSize) / bottomSize).abs();
 
-      lastPosition = position.pixels;
+      logNotify('delta', '$delta');
+      logNotify('current index', '$currentAvatarIndex');
+      if(currentAvatarIndex % 2== 0){
+        logNotify('animation ', 'forward    -$ratio');
+        controller.forward();
+        //controller.animateTo(ratio) ;
+      }else{
+        logNotify('animation', 'backd    -$ratio');
+        //controller.animateBack(ratio);
+        logNotify('sum', '${1-ratio}');
+        controller.reverse();
+//        controller.animateTo(ratio) ;
+      }
+//      if(lastPosition < position.pixels){
+//        currentAvatarIndex % 2== 0 ? controller.forward() : controller.reverse();
+//      }else if(lastPosition > position.pixels){
+//        currentAvatarIndex % 2== 0 ? controller.reverse() : controller.forward();
+//      }
+
       setState(() {
 
       });
+      lastPosition = position.pixels;
 
     });
 
@@ -148,10 +162,12 @@ class AnimationPageState extends State<AnimationPage>
 
         }else if(notification is ScrollEndNotification){
           scrollStatus = ScrollStatus.IDLE;
+          ratio = 0.0;
           ///每个viewport的宽度
           logNotify('end', '${notification.metrics.pixels}');
 
         }else if(notification is ScrollUpdateNotification){
+          delta = notification.scrollDelta;
           scrollStatus = ScrollStatus.SLIDE;
           ///滑动距离  左 滑向右 负值   ，右到左 正值
           logNotify('update', 'scroll delta   ${notification.scrollDelta}');
