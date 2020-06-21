@@ -71,14 +71,15 @@ class DemoPageState extends State<DemoPage> {
       logNotify('%', '${position.pixels%bottomSize}');
       //ratio = (position.pixels%bottomSize)/bottomSize;
       //logNotify('ratio', '$ratio');
-      if(lastPosition <= position.pixels){
-        slideDirection = SlideDirection.RIGHT;
-      }else{
-        slideDirection = SlideDirection.LEFT;
-      }
+//      if(lastPosition <= position.pixels){
+//        slideDirection = SlideDirection.RIGHT;
+//      }else{
+//        slideDirection = SlideDirection.LEFT;
+//      }
 
       ///值更新
-      value = ((position.pixels - lastPosition).abs()) * distanceRatio;
+      //value = ((position.pixels - lastPosition).abs()) * distanceRatio;
+      value = ((position.pixels - lastPosition).abs()) / bottomSize * 100;
       debugPrint('distance value    ------$value');
       cal += value.abs();
       logNotify('value sum', '$cal');
@@ -194,23 +195,25 @@ class DemoPageState extends State<DemoPage> {
   }
   double cal = 0.0;
   double geneHeightByDirection(int index){
-    logNotify('scroll direction ', '${slideDirection}');
+    //logNotify('scroll direction ', '${slideDirection}');
 
     if(currentAvatarIndex % 2 == 0){
-      logNotify('scroll direction ', '${slideDirection}');
+      //logNotify('scroll direction ', '${slideDirection}');
       if(index % 2 == 0){
         marginMap[index] = marginMap[index] - value;
       }else {
         marginMap[index] = marginMap[index] + value;
       }
+      logNotify('even top--$index', '${marginMap[index]}');
       return marginMap[index];
     }else{
-      logNotify('scroll direction ', '${slideDirection}');
-      if(index % 2 == 0){
-        marginMap[index] = marginMap[index] + value;
-      }else {
-        marginMap[index] = marginMap[index] - value;
-      }
+      //logNotify('scroll direction ', '${slideDirection}');
+//      if(index % 2 == 0){
+//        marginMap[index] = marginMap[index] + value;
+//      }else {
+//        marginMap[index] = marginMap[index] - value;
+//      }
+//      logNotify('odd top -- $index', '${marginMap[index]}');
       return marginMap[index];
     }
   }
@@ -226,6 +229,7 @@ class DemoPageState extends State<DemoPage> {
       }else {
         marginMap[index] = checkValue(marginMap[index] + (flag*ratio));
       }
+      logNotify('even top', '${marginMap[index]}');
       return marginMap[index];
     }else{
       debugPrint('down-----------------');
@@ -234,6 +238,7 @@ class DemoPageState extends State<DemoPage> {
       }else {
         marginMap[index] = checkValue(marginMap[index] - (flag*ratio));
       }
+      logNotify('odd top', '${marginMap[index]}');
       return marginMap[index];
     }
 
