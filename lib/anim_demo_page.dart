@@ -47,6 +47,8 @@ class AnimationPageState extends State<AnimationPage>
 
   //int index =0;
 
+  final int animDuration = 400;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -54,8 +56,8 @@ class AnimationPageState extends State<AnimationPage>
     norMalSize = widget.screenSize.width/5.5;
     bigSize = widget.screenSize.width/4.0;
     debugPrint('screen size  ${widget.screenSize}');
-    controller = AnimationController(vsync: this,duration: Duration(milliseconds: 500));
-    avatarControl = AnimationController(vsync: this,duration: Duration(milliseconds: 500));
+    controller = AnimationController(vsync: this,duration: Duration(milliseconds: animDuration));
+    avatarControl = AnimationController(vsync: this,duration: Duration(milliseconds: animDuration));
     begin50Anim = Tween<double>(begin: 50,end: 150).animate(controller);
     begin150Anim = Tween<double>(begin: 150,end: 50).animate(controller);
 
@@ -165,7 +167,8 @@ class AnimationPageState extends State<AnimationPage>
                     GestureDetector(
                       onTap: (){
                         if(index != currentAvatarIndex){
-                          pageController.animateToPage(index, duration: Duration(milliseconds: 550)
+                          pageController.animateToPage(index, duration:
+                          Duration(milliseconds: animDuration+50)
                               , curve: Curves.ease);
                         }
                       },
