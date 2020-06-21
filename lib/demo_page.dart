@@ -196,7 +196,7 @@ class DemoPageState extends State<DemoPage> {
   double geneHeightByDirection(int index){
     logNotify('scroll direction ', '${slideDirection}');
 
-    if(slideDirection == SlideDirection.RIGHT){
+    if(currentAvatarIndex % 2 == 0){
       logNotify('scroll direction ', '${slideDirection}');
       if(index % 2 == 0){
         marginMap[index] = marginMap[index] - value;
