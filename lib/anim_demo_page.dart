@@ -3,6 +3,12 @@
 import 'package:flutter/material.dart';
 
 class AnimationPage extends StatefulWidget{
+
+  final Size screenSize;
+
+
+  AnimationPage(this.screenSize);
+
   @override
   State<StatefulWidget> createState() {
     return AnimationPageState();
@@ -21,8 +27,11 @@ class AnimationPageState extends State<AnimationPage>
   PageController avatarController;
 
   AnimationController controller;
+  AnimationController avatarControl;
   Animation begin50Anim;
   Animation begin150Anim;
+  Animation avatarSize2Big;
+  Animation avatarSize2Small;
 
   final double topSize = 98.1818;
   final double bottomSize = 392.7272;
@@ -33,15 +42,29 @@ class AnimationPageState extends State<AnimationPage>
 
   double delta;
 
+  double norMalSize;
+  double bigSize;
+
   //int index =0;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    norMalSize = widget.screenSize.width/5.5;
+    bigSize = widget.screenSize.width/4.0;
+    debugPrint('screen size  ${widget.screenSize}');
     controller = AnimationController(vsync: this,duration: Duration(milliseconds: 500));
+    avatarControl = AnimationController(vsync: this,duration: Duration(milliseconds: 500));
     begin50Anim = Tween<double>(begin: 50,end: 150).animate(controller);
     begin150Anim = Tween<double>(begin: 150,end: 50).animate(controller);
+
+    avatarSize2Big = Tween<double>(begin: norMalSize ,end:bigSize )
+        .animate(controller);
+    avatarSize2Small = Tween<double>(begin: bigSize ,end:norMalSize )
+        .animate(controller);
+
+
 
     pageController = PageController();
     avatarController = PageController(viewportFraction: 0.25);
@@ -73,7 +96,7 @@ class AnimationPageState extends State<AnimationPage>
 //      }else if(lastPosition > position.pixels){
 //        currentAvatarIndex % 2== 0 ? controller.reverse() : controller.forward();
 //      }
-
+      if(scrollStatus == ScrollStatus.IDLE)return;
       setState(() {
 
       });
@@ -140,7 +163,8 @@ class AnimationPageState extends State<AnimationPage>
                   children: <Widget>[
                     SizedBox(width: 1,height: index%2==0?begin150Anim.value : begin50Anim.value,),
                     Container(
-                      width: MediaQuery.of(context).size.width/5,height: MediaQuery.of(context).size.width/5,
+                      width:getWidth(index),
+                      height:getWidth(index),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: index%2 == 0 ? Colors.red : Colors.yellow,
@@ -155,11 +179,51 @@ class AnimationPageState extends State<AnimationPage>
       ),
     );
   }
+
+  bool needReverse = false;///一个方向持续滑动时、动画需要reverse
+
+  double getWidth(int index){
+    logNotify('getwidth', '$delta');
+    if(delta == null){
+      //logNotify('null', '$delta');
+      return index == currentAvatarIndex ? avatarSize2Small.value : norMalSize;
+    }else if(scrollStatus == ScrollStatus.IDLE){
+      logNotify('anima value', '${controller.value}');
+      return index == currentAvatarIndex ? bigSize : norMalSize;
+//      if(controller.value == 0){
+//        return index == currentAvatarIndex ?  avatarSize2Small.value : avatarSize2Big.value;
+//      }else{
+//        return index == currentAvatarIndex ?  avatarSize2Big.value :avatarSize2Small.value;
+//      }
+    }
+    logNotify('index info', '$index ----  $currentAvatarIndex');
+
+    if(delta > 0){
+      if(index == currentAvatarIndex){
+        return needReverse ? avatarSize2Big.value : avatarSize2Small.value;
+      }else if(index == (currentAvatarIndex +1)){
+        return needReverse ? avatarSize2Small.value :  avatarSize2Big.value;
+      }else{
+        return norMalSize;
+      }
+    }else{
+      if(index == currentAvatarIndex){
+        return needReverse ?  avatarSize2Big.value : avatarSize2Small.value;
+      }else if(index == (currentAvatarIndex - 1)){
+        return needReverse ?  avatarSize2Small.value : avatarSize2Big.value ;
+      }else{
+        return norMalSize;
+      }
+    }
+  }
+
+
   int currentAvatarIndex = 0;
   int temp = 0;
 
   ScrollStatus scrollStatus = ScrollStatus.IDLE;
 
+  bool slideEnd = true;
 
   wrapWidgetWithNotify(Widget widget){
     return NotificationListener(
@@ -178,7 +242,7 @@ class AnimationPageState extends State<AnimationPage>
         }else if(notification is ScrollUpdateNotification){
           delta = notification.scrollDelta;
           scrollStatus = ScrollStatus.SLIDE;
-          ///滑动距离  左 滑向右 负值   ，右到左 正值
+          ///滑动距离  向右 负值   ，向左 正值
           logNotify('update', 'scroll delta   ${notification.scrollDelta}');
           ///手指离屏后 dragDetails 会为
           logNotify('update', 'global position      ${notification.dragDetails?.globalPosition}');
@@ -194,6 +258,7 @@ class AnimationPageState extends State<AnimationPage>
 //          logNotify('temp end scroll index', '$temp');
           //value = 0.0;
           currentAvatarIndex = temp;
+          needReverse = controller.value == 1;
           ///头/尾部 继续滑动会走这个方法
           logNotify('nothing', '-----');
           //logNotify('scroll notification', info)
