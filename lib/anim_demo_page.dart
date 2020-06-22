@@ -50,6 +50,7 @@ class AnimationPageState extends State<AnimationPage>
   final int animDuration = 400;
   bool showAvatarBorder = true;
 
+  bool isClickDrive = false;
   double slideDistance = 0.0;
 
   ///temp
@@ -78,15 +79,18 @@ class AnimationPageState extends State<AnimationPage>
     avatarController = PageController(viewportFraction: 0.25);
     pageController.addListener(() {
       ScrollPosition position = pageController.position;
-      if(slideDistance.abs() < 30){
-        if(lastPosition == 0){
-          lastPosition = position.pixels;
-        }else{
-          slideDistance = position.pixels - lastPosition;
-        }
-        logNotify('scroll', '$slideDistance');
+      if(!isClickDrive && slideDistance.abs() < 30){
         return;
       }
+//      if(slideDistance.abs() < 30){
+//        if(lastPosition == 0){
+//          lastPosition = position.pixels;
+//        }else{
+//          slideDistance = position.pixels - lastPosition;
+//        }
+//        logNotify('scroll', '$slideDistance');
+//        return;
+//      }
 
       logNotify('controller', 'scroll position  ${position.pixels}');
       avatarController.position.moveTo(position.pixels/4);
@@ -183,10 +187,11 @@ class AnimationPageState extends State<AnimationPage>
                     GestureDetector(
                       onTap: (){
                         if(index != currentAvatarIndex){
+                          isClickDrive = true;
                           if((index - currentAvatarIndex).abs() == 1){
                             pageController.animateToPage(index, duration:
                             Duration(milliseconds: animDuration+50)
-                                , curve: Curves.ease);
+                                , curve: Curves.ease).whenComplete(() => isClickDrive = false);
                           }else{
                             if(index > currentAvatarIndex){
                               pageController.animateToPage(currentAvatarIndex+1, duration:
@@ -196,7 +201,7 @@ class AnimationPageState extends State<AnimationPage>
                                     .then((value) {
                                   pageController.animateToPage(index, duration:
                                   Duration(milliseconds: animDuration+50)
-                                      , curve: Curves.ease);
+                                      , curve: Curves.ease).whenComplete(() => isClickDrive = false);
                                 });
                               });
                             }else{
@@ -207,7 +212,7 @@ class AnimationPageState extends State<AnimationPage>
                                     .then((value) {
                                   pageController.animateToPage(index, duration:
                                   Duration(milliseconds: animDuration+50)
-                                      , curve: Curves.ease);
+                                      , curve: Curves.ease).whenComplete(() => isClickDrive = false);
                                 });
                               });
                             }
@@ -305,12 +310,12 @@ class AnimationPageState extends State<AnimationPage>
         }else if(notification is ScrollUpdateNotification){
           delta = notification.scrollDelta;
           scrollStatus = ScrollStatus.SLIDE;
-//          if(notification.dragDetails != null && lastSlidePos != 0){
-//            slideDistance += notification.dragDetails.globalPosition.dx-lastSlidePos;
-//          }
-//          if(notification.dragDetails != null){
-//            lastSlidePos = notification.dragDetails.globalPosition.dx;
-//          }
+          if(notification.dragDetails != null && lastSlidePos != 0){
+            slideDistance += notification.dragDetails.globalPosition.dx-lastSlidePos;
+          }
+          if(notification.dragDetails != null){
+            lastSlidePos = notification.dragDetails.globalPosition.dx;
+          }
           logNotify('slide distance', '$slideDistance');
           showAvatarBorder = false;
           ///滑动距离  向右 负值   ，向左 正值
