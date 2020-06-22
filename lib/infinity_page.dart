@@ -206,7 +206,7 @@ class InfinityPageState extends State<InfinityPage>
                               pageController.animateToPage(currentAvatarIndex+1, duration:
                               Duration(milliseconds: animDuration+50)
                                   , curve: Curves.ease).whenComplete((){
-                                Future.delayed(Duration(milliseconds: 100))
+                                Future.delayed(Duration(milliseconds: 10))
                                     .then((value) {
                                   pageController.animateToPage(index, duration:
                                   Duration(milliseconds: animDuration+50)
@@ -217,7 +217,7 @@ class InfinityPageState extends State<InfinityPage>
                               pageController.animateToPage(currentAvatarIndex-1, duration:
                               Duration(milliseconds: animDuration+50)
                                   , curve: Curves.ease).whenComplete((){
-                                Future.delayed(Duration(milliseconds: 100))
+                                Future.delayed(Duration(milliseconds: 10))
                                     .then((value) {
                                   pageController.animateToPage(index, duration:
                                   Duration(milliseconds: animDuration+50)
