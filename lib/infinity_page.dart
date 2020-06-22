@@ -59,6 +59,8 @@ class InfinityPageState extends State<InfinityPage>
   ///temp
   double lastSlide = 0.0;
 
+  int initPageIndex = 300;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -77,9 +79,9 @@ class InfinityPageState extends State<InfinityPage>
         .animate(controller);
 
 
-
-    pageController = PageController();
-    avatarController = PageController(viewportFraction: 0.25);
+    currentAvatarIndex = initPageIndex;
+    pageController = PageController(initialPage: initPageIndex);
+    avatarController = PageController(viewportFraction: 0.25,initialPage: initPageIndex);
     pageController.addListener(() {
       ScrollPosition position = pageController.position;
       if(!isClickDrive && slideDistance.abs() < 30){
@@ -144,6 +146,8 @@ class InfinityPageState extends State<InfinityPage>
 
   }
 
+  final int itemCount = 600;
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -157,7 +161,7 @@ class InfinityPageState extends State<InfinityPage>
             onPageChanged: (index){
               temp = index;
             },
-            itemCount: 10,
+            itemCount: itemCount,
             itemBuilder: (ctx,index){
               return Column(
                 mainAxisSize: MainAxisSize.max,
@@ -184,7 +188,7 @@ class InfinityPageState extends State<InfinityPage>
               onPageChanged: (index){
 
               },
-              itemCount: 10,
+              itemCount: itemCount,
               itemBuilder: (ctx,index){
                 return Column(
                   children: <Widget>[
