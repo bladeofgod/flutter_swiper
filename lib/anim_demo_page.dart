@@ -50,6 +50,11 @@ class AnimationPageState extends State<AnimationPage>
   final int animDuration = 400;
   bool showAvatarBorder = true;
 
+  double slideDistance = 0.0;
+
+  ///temp
+  double lastSlide = 0.0;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -73,6 +78,16 @@ class AnimationPageState extends State<AnimationPage>
     avatarController = PageController(viewportFraction: 0.25);
     pageController.addListener(() {
       ScrollPosition position = pageController.position;
+      if(slideDistance.abs() < 20){
+        if(lastPosition == 0){
+          lastPosition = position.pixels;
+        }else{
+          slideDistance = position.pixels - lastPosition;
+        }
+        logNotify('scroll', '$slideDistance');
+        return;
+      }
+
       logNotify('controller', 'scroll position  ${position.pixels}');
       avatarController.position.moveTo(position.pixels/4);
 //      if(scrollStatus != ScrollStatus.SLIDE){
@@ -239,6 +254,8 @@ class AnimationPageState extends State<AnimationPage>
 
   bool slideEnd = true;
 
+  double lastSlidePos = 0.0;
+
   wrapWidgetWithNotify(Widget widget){
     return NotificationListener(
       onNotification: (ScrollNotification notification){
@@ -251,6 +268,8 @@ class AnimationPageState extends State<AnimationPage>
           scrollStatus = ScrollStatus.IDLE;
           currentAvatarIndex = temp;
           showAvatarBorder = true;
+          slideDistance = 0.0;
+          lastSlidePos = 0.0;
           needReverse = controller.value == 1;
           ratio = 0.0;
           ///每个viewport的宽度
@@ -259,11 +278,19 @@ class AnimationPageState extends State<AnimationPage>
         }else if(notification is ScrollUpdateNotification){
           delta = notification.scrollDelta;
           scrollStatus = ScrollStatus.SLIDE;
+//          if(notification.dragDetails != null && lastSlidePos != 0){
+//            slideDistance += notification.dragDetails.globalPosition.dx-lastSlidePos;
+//          }
+//          if(notification.dragDetails != null){
+//            lastSlidePos = notification.dragDetails.globalPosition.dx;
+//          }
+          logNotify('slide distance', '$slideDistance');
           showAvatarBorder = false;
           ///滑动距离  向右 负值   ，向左 正值
           logNotify('update', 'scroll delta   ${notification.scrollDelta}');
           ///手指离屏后 dragDetails 会为
           logNotify('update', 'global position      ${notification.dragDetails?.globalPosition}');
+          logNotify('update', 'global position direction     ${notification.dragDetails?.globalPosition?.distance}');
 //          if(notification.dragDetails != null){
 //            dragGlobalPosition = notification.dragDetails?.globalPosition;
 //            setState(() {
