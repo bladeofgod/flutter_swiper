@@ -48,6 +48,7 @@ class AnimationPageState extends State<AnimationPage>
   //int index =0;
 
   final int animDuration = 400;
+  bool showAvatarBorder = true;
 
   @override
   void initState() {
@@ -176,7 +177,7 @@ class AnimationPageState extends State<AnimationPage>
                         width:getWidth(index),
                         height:getWidth(index),
                         decoration: BoxDecoration(
-                          border:index == currentAvatarIndex?
+                          border:(index == currentAvatarIndex && showAvatarBorder)?
                           Border.all(color: Colors.blue,width: 4) : null,
                           shape: BoxShape.circle,
                           color: index%2 == 0 ? Colors.red : Colors.yellow,
@@ -249,6 +250,7 @@ class AnimationPageState extends State<AnimationPage>
         }else if(notification is ScrollEndNotification){
           scrollStatus = ScrollStatus.IDLE;
           currentAvatarIndex = temp;
+          showAvatarBorder = true;
           needReverse = controller.value == 1;
           ratio = 0.0;
           ///每个viewport的宽度
@@ -257,6 +259,7 @@ class AnimationPageState extends State<AnimationPage>
         }else if(notification is ScrollUpdateNotification){
           delta = notification.scrollDelta;
           scrollStatus = ScrollStatus.SLIDE;
+          showAvatarBorder = false;
           ///滑动距离  向右 负值   ，向左 正值
           logNotify('update', 'scroll delta   ${notification.scrollDelta}');
           ///手指离屏后 dragDetails 会为
