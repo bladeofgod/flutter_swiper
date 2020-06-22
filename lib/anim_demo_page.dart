@@ -183,9 +183,36 @@ class AnimationPageState extends State<AnimationPage>
                     GestureDetector(
                       onTap: (){
                         if(index != currentAvatarIndex){
-                          pageController.animateToPage(index, duration:
-                          Duration(milliseconds: animDuration+50)
-                              , curve: Curves.ease);
+                          if((index - currentAvatarIndex).abs() == 1){
+                            pageController.animateToPage(index, duration:
+                            Duration(milliseconds: animDuration+50)
+                                , curve: Curves.ease);
+                          }else{
+                            if(index > currentAvatarIndex){
+                              pageController.animateToPage(currentAvatarIndex+1, duration:
+                              Duration(milliseconds: animDuration+50)
+                                  , curve: Curves.ease).whenComplete((){
+                                Future.delayed(Duration(milliseconds: 100))
+                                    .then((value) {
+                                  pageController.animateToPage(index, duration:
+                                  Duration(milliseconds: animDuration+50)
+                                      , curve: Curves.ease);
+                                });
+                              });
+                            }else{
+                              pageController.animateToPage(currentAvatarIndex-1, duration:
+                              Duration(milliseconds: animDuration+50)
+                                  , curve: Curves.ease).whenComplete((){
+                                Future.delayed(Duration(milliseconds: 100))
+                                    .then((value) {
+                                  pageController.animateToPage(index, duration:
+                                  Duration(milliseconds: animDuration+50)
+                                      , curve: Curves.ease);
+                                });
+                              });
+                            }
+
+                          }
                         }
                       },
                       child: Container(
