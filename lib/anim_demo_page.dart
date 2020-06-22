@@ -78,7 +78,7 @@ class AnimationPageState extends State<AnimationPage>
     avatarController = PageController(viewportFraction: 0.25);
     pageController.addListener(() {
       ScrollPosition position = pageController.position;
-      if(slideDistance.abs() < 20){
+      if(slideDistance.abs() < 30){
         if(lastPosition == 0){
           lastPosition = position.pixels;
         }else{
