@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttercomplexswiper/anim_demo_page.dart';
 import 'package:fluttercomplexswiper/demo_page.dart';
 
+import 'custom_page.dart';
 import 'infinity_page.dart';
 
 void main() {
@@ -32,7 +33,8 @@ class MyApp extends StatelessWidget {
       ),
       home: Builder(
         builder: (ctx){
-          return InfinityPage(MediaQuery.of(ctx).size);
+          return CustomPage(MediaQuery.of(ctx).size);
+          //return InfinityPage(MediaQuery.of(ctx).size);
           //return AnimationPage(MediaQuery.of(ctx).size);
         },
       ),
