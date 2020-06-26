@@ -81,7 +81,9 @@ class CustomPageState extends State<CustomPage>
 
     currentAvatarIndex = initPageIndex;
     pageController = PageController(initialPage: initPageIndex);
-    avatarController = PageController(viewportFraction: 0.25,initialPage: initPageIndex);
+    avatarController = PageController(
+        viewportFraction: 0.3,
+        initialPage: initPageIndex);
     pageController.addListener(() {
       ScrollPosition position = pageController.position;
       if(!isClickDrive && slideDistance.abs() < 30){
@@ -190,57 +192,61 @@ class CustomPageState extends State<CustomPage>
               },
               childrenDelegate: SliverChildBuilderDelegate(
                 (ctx,index){
-                  return Column(
-                    children: <Widget>[
-                      SizedBox(width: 1,height: index%2==0?begin150Anim.value : begin50Anim.value,),
-                      GestureDetector(
-                        onTap: (){
-                          if(index != currentAvatarIndex){
-                            isClickDrive = true;
-                            if((index - currentAvatarIndex).abs() == 1){
-                              pageController.animateToPage(index, duration:
-                              Duration(milliseconds: animDuration+50)
-                                  , curve: Curves.ease).whenComplete(() => isClickDrive = false);
-                            }else{
-                              if(index > currentAvatarIndex){
-                                pageController.animateToPage(currentAvatarIndex+1, duration:
+                  return Container(
+                    color: Colors.deepPurpleAccent,
+                    //width: size.width/3,height: 300,
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(width: 1,height: index%2==0?begin150Anim.value : begin50Anim.value,),
+                        GestureDetector(
+                          onTap: (){
+                            if(index != currentAvatarIndex){
+                              isClickDrive = true;
+                              if((index - currentAvatarIndex).abs() == 1){
+                                pageController.animateToPage(index, duration:
                                 Duration(milliseconds: animDuration+50)
-                                    , curve: Curves.ease).whenComplete((){
-                                  Future.delayed(Duration(milliseconds: 10))
-                                      .then((value) {
-                                    pageController.animateToPage(index, duration:
-                                    Duration(milliseconds: animDuration+50)
-                                        , curve: Curves.ease).whenComplete(() => isClickDrive = false);
-                                  });
-                                });
+                                    , curve: Curves.ease).whenComplete(() => isClickDrive = false);
                               }else{
-                                pageController.animateToPage(currentAvatarIndex-1, duration:
-                                Duration(milliseconds: animDuration+50)
-                                    , curve: Curves.ease).whenComplete((){
-                                  Future.delayed(Duration(milliseconds: 10))
-                                      .then((value) {
-                                    pageController.animateToPage(index, duration:
-                                    Duration(milliseconds: animDuration+50)
-                                        , curve: Curves.ease).whenComplete(() => isClickDrive = false);
+                                if(index > currentAvatarIndex){
+                                  pageController.animateToPage(currentAvatarIndex+1, duration:
+                                  Duration(milliseconds: animDuration+50)
+                                      , curve: Curves.ease).whenComplete((){
+                                    Future.delayed(Duration(milliseconds: 10))
+                                        .then((value) {
+                                      pageController.animateToPage(index, duration:
+                                      Duration(milliseconds: animDuration+50)
+                                          , curve: Curves.ease).whenComplete(() => isClickDrive = false);
+                                    });
                                   });
-                                });
-                              }
+                                }else{
+                                  pageController.animateToPage(currentAvatarIndex-1, duration:
+                                  Duration(milliseconds: animDuration+50)
+                                      , curve: Curves.ease).whenComplete((){
+                                    Future.delayed(Duration(milliseconds: 10))
+                                        .then((value) {
+                                      pageController.animateToPage(index, duration:
+                                      Duration(milliseconds: animDuration+50)
+                                          , curve: Curves.ease).whenComplete(() => isClickDrive = false);
+                                    });
+                                  });
+                                }
 
+                              }
                             }
-                          }
-                        },
-                        child: Container(
-                          width:getWidth(index),
-                          height:getWidth(index),
-                          decoration: BoxDecoration(
-                            border:(index == currentAvatarIndex && showAvatarBorder)?
-                            Border.all(color: Colors.blue,width: 4) : null,
-                            shape: BoxShape.circle,
-                            color: index%2 == 0 ? Colors.red : Colors.yellow,
+                          },
+                          child: Container(
+                            width:getWidth(index),
+                            height:getWidth(index),
+                            decoration: BoxDecoration(
+                              border:(index == currentAvatarIndex && showAvatarBorder)?
+                              Border.all(color: Colors.blue,width: 4) : null,
+                              shape: BoxShape.circle,
+                              color: index%2 == 0 ? Colors.red : Colors.yellow,
+                            ),
                           ),
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   );
                 },
                 childCount: itemCount,
