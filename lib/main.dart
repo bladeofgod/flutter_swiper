@@ -35,8 +35,8 @@ class MyApp extends StatelessWidget {
       ),
       home: Builder(
         builder: (ctx){
-          return ListDemo(MediaQuery.of(ctx).size);
-          //return InfinityPage(MediaQuery.of(ctx).size);
+          //return ListDemo(MediaQuery.of(ctx).size);
+          return InfinityPage(MediaQuery.of(ctx).size);
           //return AnimationPage(MediaQuery.of(ctx).size);
         },
       ),
