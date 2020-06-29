@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttercomplexswiper/anim_demo_page.dart';
+import 'package:fluttercomplexswiper/custom/list_demo.dart';
 import 'package:fluttercomplexswiper/demo_page.dart';
 
 import 'custom/page_demo.dart';
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
       ),
       home: Builder(
         builder: (ctx){
-          return PageDemo(MediaQuery.of(ctx).size);
+          return ListDemo(MediaQuery.of(ctx).size);
           //return InfinityPage(MediaQuery.of(ctx).size);
           //return AnimationPage(MediaQuery.of(ctx).size);
         },
