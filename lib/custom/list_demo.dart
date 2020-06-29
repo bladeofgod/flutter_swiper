@@ -4,6 +4,7 @@
 */
 
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class ListDemo extends StatefulWidget{
@@ -32,7 +33,7 @@ class ListDemoState extends State<ListDemo> {
     super.initState();
 
 
-    pageController = PageController(viewportFraction: 0.5);
+    pageController = PageController(viewportFraction: 1.0);
     pageController.addListener(() {});
     scrollController = ScrollController();
 
@@ -66,6 +67,8 @@ class ListDemoState extends State<ListDemo> {
 
           Expanded(
             child: wrapWidgetWithNotify(PageView(
+              allowImplicitScrolling: false,
+              dragStartBehavior: DragStartBehavior.down,
               controller: pageController,
               onPageChanged: (index){
                 logNotify('pageview', '$index');
@@ -74,7 +77,7 @@ class ListDemoState extends State<ListDemo> {
 
                 });
               },
-              children: List.generate(30, (index){
+              children: List.generate(5, (index){
                 return Container(
                   margin: EdgeInsets.symmetric(horizontal: 10),
                   color: index%2==0? Colors.yellow:Colors.red,
