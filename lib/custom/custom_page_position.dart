@@ -6,6 +6,8 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
+import 'custom_page_view.dart';
+
 /// The epsilon of tolerable double precision error.
 ///
 /// This is used in various places in the framework to allow for floating point
@@ -13,14 +15,14 @@ import 'dart:math' as math;
 /// disregard.
 const double precisionErrorTolerance = 1e-10;
 
-class CustomPagePosition extends ScrollPositionWithSingleContext implements PageMetrics{
+class CustomPagePosition extends ScrollPositionWithSingleContext implements CustomPageMetrics{
 
   CustomPagePosition({
     ScrollPhysics physics,
     ScrollContext context,
     this.initialPage = 0,
     bool keepPage = true,
-    double middleViewPortFraction = 1.0,
+    //double middleViewPortFraction = 1.0,
     double sideViewportFraction = 1.0,
     double viewportFraction = 1.0,///这个值不用了
     ScrollPosition oldPosition,
@@ -30,7 +32,7 @@ class CustomPagePosition extends ScrollPositionWithSingleContext implements Page
         assert(viewportFraction > 0.0),
         _viewportFraction = viewportFraction,
         _pageToUseOnStartup = initialPage.toDouble(),
-        this.middleViewPortFraction = middleViewPortFraction,
+        //this.middleViewPortFraction = middleViewPortFraction,
         this.sideViewportFraction = sideViewportFraction,
         super(
         physics: physics,
@@ -40,7 +42,7 @@ class CustomPagePosition extends ScrollPositionWithSingleContext implements Page
         oldPosition: oldPosition,
       );
 
-  double middleViewPortFraction = 1.0;
+  //double middleViewPortFraction = 1.0;
   double sideViewportFraction = 1.0;
 
   final int initialPage;
@@ -80,7 +82,7 @@ class CustomPagePosition extends ScrollPositionWithSingleContext implements Page
 //  }
 
   double getPixelsFromPage(double page) {
-    return (page - 1) * viewportDimension * sideViewportFraction + viewportDimension*middleViewPortFraction + _initialPageOffset;
+    return (page - 1) * viewportDimension * sideViewportFraction + viewportDimension*viewportFraction + _initialPageOffset;
   }
 
   @override
@@ -131,7 +133,7 @@ class CustomPagePosition extends ScrollPositionWithSingleContext implements Page
   }
 
   @override
-  PageMetrics copyWith({
+  CustomPageMetrics copyWith({
     double minScrollExtent,
     double maxScrollExtent,
     double pixels,
@@ -139,7 +141,7 @@ class CustomPagePosition extends ScrollPositionWithSingleContext implements Page
     AxisDirection axisDirection,
     double viewportFraction,
   }) {
-    return PageMetrics(
+    return CustomPageMetrics(
       minScrollExtent: minScrollExtent ?? this.minScrollExtent,
       maxScrollExtent: maxScrollExtent ?? this.maxScrollExtent,
       pixels: pixels ?? this.pixels,
@@ -148,5 +150,8 @@ class CustomPagePosition extends ScrollPositionWithSingleContext implements Page
       viewportFraction: viewportFraction ?? this.viewportFraction,
     );
   }
+
+  @override
+  double middleViewPortFraction;
 
 }

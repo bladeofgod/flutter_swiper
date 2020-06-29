@@ -5,10 +5,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/rendering.dart';
 import 'custom_page_controller.dart';
 import 'custom_scroll_physics.dart';
 import 'custom_page_position.dart';
 
+import 'dart:math' as math;
+
+import 'custom_sliver_fill.dart';
 
 final CustomPageController _defaultPageController = CustomPageController();
 const CustomScrollPhysics _kPagePhysics = CustomScrollPhysics();
@@ -19,7 +23,7 @@ class CustomPageView extends StatefulWidget{
     Key key,
     this.scrollDirection = Axis.horizontal,
     this.reverse = false,
-    PageController controller,
+    CustomPageController controller,
     this.physics,
     this.pageSnapping = true,
     this.onPageChanged,
@@ -110,8 +114,10 @@ class _CustomPageViewState extends State<CustomPageView> {
     return null;
   }
 
+
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     final AxisDirection axisDirection = _getDirection(context);
     final ScrollPhysics physics = _ForceImplicitScrollPhysics(
       allowImplicitScrolling: widget.allowImplicitScrolling,
@@ -122,7 +128,7 @@ class _CustomPageViewState extends State<CustomPageView> {
     return NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification notification) {
         if (notification.depth == 0 && widget.onPageChanged != null && notification is ScrollUpdateNotification) {
-          final PageMetrics metrics = notification.metrics as PageMetrics;
+          final CustomPageMetrics metrics = notification.metrics as CustomPageMetrics;
           final int currentPage = metrics.page.round();
           if (currentPage != _lastReportedPage) {
             _lastReportedPage = currentPage;
@@ -137,6 +143,7 @@ class _CustomPageViewState extends State<CustomPageView> {
         controller: widget.controller,
         physics: physics,
         viewportBuilder: (BuildContext context, ViewportOffset position) {
+          debugPrint('scrollable  $position');
           return Viewport(
             // TODO(dnfield): we should provide a way to set cacheExtent
             // independent of implicit scrolling:
@@ -147,7 +154,8 @@ class _CustomPageViewState extends State<CustomPageView> {
             offset: position,
             slivers: <Widget>[
               SliverFillViewport(
-                viewportFraction: widget.controller.viewportFraction,
+                //padEnds: false,
+                viewportFraction:position.pixels == null ? 0.4 :(position.pixels%(size.width*0.2) == 0 ?0.2 : 0.4),
                 delegate: widget.childrenDelegate,
               ),
             ],
@@ -186,6 +194,69 @@ class _ForceImplicitScrollPhysics extends ScrollPhysics {
 
   @override
   final bool allowImplicitScrolling;
+}
+
+
+/// Metrics for a [PageView].
+///
+/// The metrics are available on [ScrollNotification]s generated from
+/// [PageView]s.
+class CustomPageMetrics extends FixedScrollMetrics {
+  /// Creates an immutable snapshot of values associated with a [PageView].
+  CustomPageMetrics({
+    @required double minScrollExtent,
+    @required double maxScrollExtent,
+    @required double pixels,
+    @required double viewportDimension,
+    @required AxisDirection axisDirection,
+    @required this.viewportFraction,
+    this.middleViewPortFraction,
+    this.sideViewportFraction,
+  }) : super(
+    minScrollExtent: minScrollExtent,
+    maxScrollExtent: maxScrollExtent,
+    pixels: pixels,
+    viewportDimension: viewportDimension,
+    axisDirection: axisDirection,
+  );
+
+  @override
+  CustomPageMetrics copyWith({
+    double minScrollExtent,
+    double maxScrollExtent,
+    double pixels,
+    double viewportDimension,
+    AxisDirection axisDirection,
+    double viewportFraction,
+  }) {
+    return CustomPageMetrics(
+      minScrollExtent: minScrollExtent ?? this.minScrollExtent,
+      maxScrollExtent: maxScrollExtent ?? this.maxScrollExtent,
+      pixels: pixels ?? this.pixels,
+      viewportDimension: viewportDimension ?? this.viewportDimension,
+      axisDirection: axisDirection ?? this.axisDirection,
+      viewportFraction: viewportFraction ?? this.viewportFraction,
+    );
+  }
+
+  /// The current page displayed in the [PageView].
+//  double get page {
+//    return math.max(0.0, pixels.clamp(minScrollExtent, maxScrollExtent)) /
+//        math.max(1.0, viewportDimension * viewportFraction);
+//  }
+
+  double get page {
+    return math.max(0.0, pixels.clamp(minScrollExtent, maxScrollExtent)) /
+        math.max(1.0, viewportDimension * middleViewPortFraction);
+  }
+
+  /// The fraction of the viewport that each page occupies.
+  ///
+  /// Used to compute [page] from the current [pixels].
+  final double viewportFraction;
+
+  double middleViewPortFraction = 1.0;
+  double sideViewportFraction = 1.0;
 }
 
 

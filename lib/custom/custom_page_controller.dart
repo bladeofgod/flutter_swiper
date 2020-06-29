@@ -16,15 +16,15 @@ class CustomPageController extends ScrollController {
   CustomPageController({
     this.initialPage = 0,
     this.keepPage = true,
-    this.middleViewPortFraction,
-    this.sideViewportFraction,
+    //this.middleViewPortFraction = 1.0,
+    this.sideViewportFraction = 1.0,
     this.viewportFraction = 1.0,
   }) : assert(initialPage != null),
         assert(keepPage != null),
         assert(viewportFraction != null),
         assert(viewportFraction > 0.0);
 
-  double middleViewPortFraction = 1.0;
+  //double middleViewPortFraction = 1.0;
   double sideViewportFraction = 1.0;
 
   /// The page to show when first creating the [PageView].
@@ -139,7 +139,7 @@ class CustomPageController extends ScrollController {
       context: context,
       initialPage: initialPage,
       keepPage: keepPage,
-      middleViewPortFraction: middleViewPortFraction,
+      //middleViewPortFraction: middleViewPortFraction,
       sideViewportFraction: sideViewportFraction,
       viewportFraction: viewportFraction,
       oldPosition: oldPosition,
