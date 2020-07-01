@@ -5,6 +5,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:fluttercomplexswiper/animation_demo/avatar_widget.dart';
 
 
 class AnimationDrivePage extends StatefulWidget{
@@ -47,8 +48,14 @@ class AnimationDrivePageState extends State<AnimationDrivePage>{
         children: <Widget>[
           ///avatar
           Container(
+            padding: EdgeInsets.only(top: 40),
             width: size.width,height: 300,
             color: Colors.grey,
+            child: Stack(
+              children: <Widget>[
+                AvatarWidget(Size(size.width,260), 50, 100, Colors.red)
+              ],
+            ),
           ),
           SizedBox(width: 1,height: 20,),
 
