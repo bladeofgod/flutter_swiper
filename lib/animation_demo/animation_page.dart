@@ -95,13 +95,14 @@ class AnimationDrivePageState extends State<AnimationDrivePage>{
   int tempIndex = 5;
 
   double lastPosition = 0.0;
+  final double singleWidth = 353.454545;
 
   wrapWidget(Widget widget){
     return NotificationListener(
       onNotification: (ScrollNotification notification){
         if(notification is ScrollUpdateNotification){
-          double singleWidth = 353;
-          debugPrint('${notification.metrics.pixels}');
+
+          //debugPrint('${notification.metrics.pixels}');
           double delta = notification.scrollDelta;
           if(delta > 0){
             ///向左
@@ -114,7 +115,13 @@ class AnimationDrivePageState extends State<AnimationDrivePage>{
             }
           }
 
-          double progress = ((notification.metrics.pixels%singleWidth) / singleWidth).clamp(0,1);
+//          debugPrint('demension ${notification.metrics.viewportDimension}');
+//          debugPrint('  -----${ notification.metrics.maxScrollExtent/10}');
+          lastPosition += notification.scrollDelta;
+          debugPrint('------------${lastPosition}');
+
+          double progress = (lastPosition/ singleWidth).clamp(0.0,1.0);
+          //debugPrint('$progress');
           pageModel.setSlideProgress(progress);
 
         }
@@ -122,6 +129,7 @@ class AnimationDrivePageState extends State<AnimationDrivePage>{
           debugPrint('${notification.metrics.maxScrollExtent / 10}');
         }
         if(notification is ScrollEndNotification){
+          lastPosition = 0;
           debugPrint('${pageModel.currentIndex}-------$tempIndex');
           pageModel.setCurrentIndex(tempIndex);
 
