@@ -44,50 +44,51 @@ class AnimationDrivePageState extends State<AnimationDrivePage>{
   Widget build(BuildContext context) {
 
 
-    return ChangeNotifierProvider<PageModel>.value(
-      value: pageModel,
-      child: Container(
-        color: Colors.white,
-        width: size.width,height: size.height,
-        child: Column(
-          children: <Widget>[
-            ///avatar
-            Container(
+    return Container(
+      color: Colors.white,
+      width: size.width,height: size.height,
+      child: Column(
+        children: <Widget>[
+          ///avatar
+          ChangeNotifierProvider<PageModel>.value(
+            value: pageModel,
+            child: Container(
               padding: EdgeInsets.only(top: 40),
               width: size.width,height: 300,
               color: Colors.grey,
               child: Stack(
                 children: <Widget>[
                   ...List.generate(10, (index){
-                    return AvatarWidget(Size(size.width,260), 70, 140,index%2 == 0 ?  Colors.red : Colors.yellow,index);
+                    return AvatarWidget(Size(size.width,260), 70, 140,index % 2 == 0 ?  Colors.red : Colors.yellow,index);
                   }).toList(),
                 ],
               ),
             ),
-            SizedBox(width: 1,height: 20,),
+          ),
 
-            ///card
-            Expanded(
-              child: wrapWidget(
-                  PageView(
-                    controller: pageController,
-                    onPageChanged: (index){
-                      tempIndex = index;
-                    },
-                    children: List.generate(10, (index){
-                      return Container(
-                        margin: EdgeInsets.symmetric(horizontal: 20),
-                        width: size.width,height: size.height-320,
-                        color: index % 2== 0 ? Colors.red : Colors.yellow,
-                      );
-                    }).toList(),
-                  )
-              ),
+          SizedBox(width: 1,height: 20,),
+
+          ///card
+          Expanded(
+            child: wrapWidget(
+                PageView(
+                  controller: pageController,
+                  onPageChanged: (index){
+                    tempIndex = index;
+                  },
+                  children: List.generate(10, (index){
+                    return Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      width: size.width,height: size.height-320,
+                      color: index % 2== 0 ? Colors.red : Colors.yellow,
+                    );
+                  }).toList(),
+                )
             ),
-          ],
-        ),
-
+          ),
+        ],
       ),
+
     );
   }
 
@@ -121,7 +122,8 @@ class AnimationDrivePageState extends State<AnimationDrivePage>{
           debugPrint('${notification.metrics.maxScrollExtent / 10}');
         }
         if(notification is ScrollEndNotification){
-          pageModel.currentIndex = tempIndex;
+          debugPrint('${pageModel.currentIndex}-------$tempIndex');
+          pageModel.setCurrentIndex(tempIndex);
 
         }
 

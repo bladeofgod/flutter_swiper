@@ -17,6 +17,10 @@ class PageModel extends ChangeNotifier{
   PageModel(this.initIndex):currentIndex = initIndex;
 
   int currentIndex = 0;
+  setCurrentIndex(int index){
+    currentIndex = index;
+    notifyListeners();
+  }
 
   ///页面滑动百分比
   double pageSlideProgress = 0.0;
