@@ -39,9 +39,12 @@ class AvatarWidgetState extends State<AvatarWidget> with TickerProviderStateMixi
   ///下层头像 的top值
   double belowTop;
 
+  double singleBlockWidth;
+
   AvatarWidgetState(this.size,this.normalSize,this.biggerSize,this.color,this.index,this.halfOfBiggerSize)
     :upperTop = 0,
-      belowTop = 160;
+      belowTop = 160,
+      singleBlockWidth = size.width/4;
 
   PageModel _pageModel;
 
@@ -69,19 +72,19 @@ class AvatarWidgetState extends State<AvatarWidget> with TickerProviderStateMixi
   double getSize(){
     if(index == _pageModel.currentIndex){
       //左右滑动 都是缩小
-      return biggerSize - getDValue();
+      return biggerSize - getSizeDValue();
     }else if(index == _pageModel.currentIndex-1 && _pageModel.slideDirection == SlideDirection.Right){
       ///前一个向中间划动
-      return normalSize + getDValue();
+      return normalSize + getSizeDValue();
     }else if(index == _pageModel.currentIndex +1 && _pageModel.slideDirection == SlideDirection.Left){
       ///后一个向中间划动
-      return normalSize + getDValue();
+      return normalSize + getSizeDValue();
     }else {
       return normalSize;
     }
   }
 
-  double getDValue(){
+  double getSizeDValue(){
     return ((biggerSize - normalSize) * _pageModel.pageSlideProgress);
   }
 
@@ -92,13 +95,7 @@ class AvatarWidgetState extends State<AvatarWidget> with TickerProviderStateMixi
   *
   * 1-5宽度是（屏幕宽度+nromalSize）。
   *
-  * 以下统一计算距离屏幕的left的值
-  * 1 ： - normalSize/2
-  * 2 :    normalSize * 0.8
-  * 3 :    (size.width-biggerSize) / 2
-  * 4 :    size.width - normalSize*1.8
-  * 5 :    size.width + normalSize*0.5
-  *
+  * 左右平移距离 暂定为单步 size.width/4 :singleBlockWidth
   * */
 
 
@@ -106,12 +103,67 @@ class AvatarWidgetState extends State<AvatarWidget> with TickerProviderStateMixi
     if(index == _pageModel.currentIndex){
       if(_pageModel.slideDirection == SlideDirection.Left){
         ///中间向左滑动
-        return biggerSize/2 *
+        return (singleBlockWidth * 2 - biggerSize/2) - getLeftDValue();
+      }else{
+        ///中间向右滑动
+        return (singleBlockWidth * 2 - biggerSize/2) + getLeftDValue();
       }
-    }else{}
+    }else if(index == (_pageModel.currentIndex - 1)){
+      ///中间左1
+      if(_pageModel.slideDirection == SlideDirection.Left){
+        return (singleBlockWidth - normalSize/2) - getLeftDValue();
+      }else{
+        return (singleBlockWidth - normalSize/2) + getLeftDValue();
+      }
+    }else if(index == (_pageModel.currentIndex + 1)){
+      ///中间右1
+      if(_pageModel.slideDirection == SlideDirection.Left){
+        return (singleBlockWidth * 3 - normalSize/2) - getLeftDValue();
+      }else {
+        return (singleBlockWidth * 3 - normalSize/2) + getLeftDValue();
+      }
+    }else if(index == (_pageModel.currentIndex - 2)){
+      if(_pageModel.slideDirection == SlideDirection.Left){
+        return -(normalSize/2) - getLeftDValue();
+      }else{
+        return -(normalSize/2) + getLeftDValue();
+      }
+    }else if(index == (_pageModel.currentIndex + 2)){
+      if(_pageModel.slideDirection == SlideDirection.Left){
+        return (singleBlockWidth * 4 - normalSize/2)  - getLeftDValue();
+      }else {
+        return (singleBlockWidth * 4 - normalSize/2)  + getLeftDValue();
+      }
+    }else if(index < (_pageModel.currentIndex - 2)){
+      if(_pageModel.slideDirection == SlideDirection.Left){
+        return (singleBlockWidth * (index-_pageModel.currentIndex-2))-normalSize/2 - getLeftDValue();
+      }else{
+        return (singleBlockWidth * (index-_pageModel.currentIndex-2))-normalSize/2 + getLeftDValue();
+      }
+    }else{
+      if(_pageModel.slideDirection == SlideDirection.Left){
+        return (singleBlockWidth * (index-_pageModel.currentIndex+2))-normalSize/2 - getLeftDValue();
+      }else{
+        return (singleBlockWidth * (index-_pageModel.currentIndex+2))-normalSize/2 + getLeftDValue();
+      }
+    }
   }
 
-  double getTop(){}
+  double getLeftDValue(){
+    return size.width * _pageModel.pageSlideProgress;
+  }
+
+  double getTop(){
+    if((index -_pageModel.currentIndex)%2 == 0){
+      return belowTop - getTopDValue();
+    }else{
+      return upperTop + getTopDValue();
+    }
+  }
+
+  double getTopDValue(){
+    return (belowTop - upperTop) * _pageModel.pageSlideProgress;
+  }
 }
 
 

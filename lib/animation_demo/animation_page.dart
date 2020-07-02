@@ -32,6 +32,7 @@ class AnimationDrivePageState extends State<AnimationDrivePage>{
   AnimationDrivePageState(this.size);
 
   PageController pageController;
+  PageModel pageModel = PageModel(5);
 
   @override
   void initState() {
@@ -44,7 +45,7 @@ class AnimationDrivePageState extends State<AnimationDrivePage>{
 
 
     return ChangeNotifierProvider<PageModel>.value(
-      value: PageModel(5),
+      value: pageModel,
       child: Container(
         color: Colors.white,
         width: size.width,height: size.height,
@@ -58,8 +59,8 @@ class AnimationDrivePageState extends State<AnimationDrivePage>{
               child: Stack(
                 children: <Widget>[
                   ...List.generate(10, (index){
-                    AvatarWidget(Size(size.width,260), 50, 100, Colors.red,index);
-                  }),
+                    return AvatarWidget(Size(size.width,260), 50, 100, Colors.red,index);
+                  }).toList(),
                 ],
               ),
             ),
@@ -67,21 +68,67 @@ class AnimationDrivePageState extends State<AnimationDrivePage>{
 
             ///card
             Expanded(
-              child: PageView(
-                controller: pageController,
-                children: List.generate(10, (index){
-                  return Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    width: size.width,height: size.height-320,
-                    color: index % 2== 0 ? Colors.red : Colors.yellow,
-                  );
-                }).toList(),
+              child: wrapWidget(
+                  PageView(
+                    controller: pageController,
+                    onPageChanged: (index){
+                      tempIndex = index;
+                    },
+                    children: List.generate(10, (index){
+                      return Container(
+                        margin: EdgeInsets.symmetric(horizontal: 20),
+                        width: size.width,height: size.height-320,
+                        color: index % 2== 0 ? Colors.red : Colors.yellow,
+                      );
+                    }).toList(),
+                  )
               ),
             ),
           ],
         ),
 
       ),
+    );
+  }
+
+  int tempIndex = 5;
+
+  double lastPosition = 0.0;
+
+  wrapWidget(Widget widget){
+    return NotificationListener(
+      onNotification: (ScrollNotification notification){
+        if(notification is ScrollUpdateNotification){
+          double singleWidth = 353;
+          debugPrint('${notification.metrics.pixels}');
+          double delta = notification.scrollDelta;
+          if(delta > 0){
+            ///向左
+            if(pageModel.slideDirection != SlideDirection.Left){
+              pageModel.setDirection(SlideDirection.Left);
+            }
+          }else{
+            if(pageModel.slideDirection != SlideDirection.Right){
+              pageModel.setDirection(SlideDirection.Right);
+            }
+          }
+
+          double progress = ((notification.metrics.pixels%singleWidth) / singleWidth).clamp(0,1);
+          pageModel.setSlideProgress(progress);
+
+        }
+        if(notification is ScrollStartNotification){
+          debugPrint('${notification.metrics.maxScrollExtent / 10}');
+        }
+        if(notification is ScrollEndNotification){
+          pageModel.currentIndex = tempIndex;
+
+        }
+
+        return true;
+
+      },
+      child: widget,
     );
   }
 
