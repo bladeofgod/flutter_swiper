@@ -150,7 +150,7 @@ class AvatarWidgetState extends State<AvatarWidget> with TickerProviderStateMixi
   }
 
   double getLeftDValue(){
-    return size.width * _pageModel.pageSlideProgress;
+    return singleBlockWidth * _pageModel.pageSlideProgress;
   }
 
   double getTop(){
