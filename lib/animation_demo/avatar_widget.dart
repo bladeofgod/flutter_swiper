@@ -42,8 +42,8 @@ class AvatarWidgetState extends State<AvatarWidget> with TickerProviderStateMixi
   double singleBlockWidth;
 
   AvatarWidgetState(this.size,this.normalSize,this.biggerSize,this.color,this.index,this.halfOfBiggerSize)
-    :upperTop = 0,
-      belowTop = 160,
+    :upperTop = 20,
+      belowTop = 120,
       singleBlockWidth = size.width/4;
 
   PageModel _pageModel;

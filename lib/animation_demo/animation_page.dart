@@ -59,7 +59,7 @@ class AnimationDrivePageState extends State<AnimationDrivePage>{
               child: Stack(
                 children: <Widget>[
                   ...List.generate(10, (index){
-                    return AvatarWidget(Size(size.width,260), 50, 100, Colors.red,index);
+                    return AvatarWidget(Size(size.width,260), 70, 140,index%2 == 0 ?  Colors.red : Colors.yellow,index);
                   }).toList(),
                 ],
               ),
