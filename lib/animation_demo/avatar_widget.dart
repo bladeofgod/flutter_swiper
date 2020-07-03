@@ -52,7 +52,7 @@ class AvatarWidgetState extends State<AvatarWidget> with TickerProviderStateMixi
   Widget build(BuildContext context) {
     return Consumer<PageModel>(
       builder: (ctx,pageModel,child){
-        debugPrint('build~~~');
+        //debugPrint('build~~~ ${index} ---${pageModel.currentIndex}');
         _pageModel = pageModel;
         return Positioned(
           left: getLeft(),

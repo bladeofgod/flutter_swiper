@@ -102,16 +102,19 @@ class AnimationDrivePageState extends State<AnimationDrivePage>{
       onNotification: (ScrollNotification notification){
         if(notification is ScrollUpdateNotification){
 
-          //debugPrint('${notification.metrics.pixels}');
-          double delta = notification.scrollDelta;
-          if(delta > 0){
-            ///向左
-            if(pageModel.slideDirection != SlideDirection.Left){
-              pageModel.setDirection(SlideDirection.Left);
-            }
-          }else{
-            if(pageModel.slideDirection != SlideDirection.Right){
-              pageModel.setDirection(SlideDirection.Right);
+          //debugPrint('--aaaaa---${notification.dragDetails.delta.direction}');
+//          double delta = notification.scrollDelta;
+//          debugPrint("$delta");
+          if(notification.dragDetails != null){
+            if(notification.dragDetails.delta.direction > 0){
+              ///向左
+              if(pageModel.slideDirection != SlideDirection.Left){
+                pageModel.setDirection(SlideDirection.Left);
+              }
+            }else{
+              if(pageModel.slideDirection != SlideDirection.Right){
+                pageModel.setDirection(SlideDirection.Right);
+              }
             }
           }
 
@@ -126,11 +129,16 @@ class AnimationDrivePageState extends State<AnimationDrivePage>{
 
         }
         if(notification is ScrollStartNotification){
-          debugPrint('${notification.metrics.maxScrollExtent / 10}');
+          //debugPrint('${notification.metrics.maxScrollExtent / 10}');
+          debugPrint('start');
+          pageModel.isScrolling = true;
         }
         if(notification is ScrollEndNotification){
+          debugPrint('end');
+          pageModel.isScrolling = false;
           lastPosition = 0;
           debugPrint('${pageModel.currentIndex}-------$tempIndex');
+          pageModel.pageSlideProgress = 0.0;
           pageModel.setCurrentIndex(tempIndex);
 
         }

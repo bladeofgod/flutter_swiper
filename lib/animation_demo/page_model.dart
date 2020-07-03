@@ -19,8 +19,12 @@ class PageModel extends ChangeNotifier{
   int currentIndex = 0;
   setCurrentIndex(int index){
     currentIndex = index;
-    notifyListeners();
+    //notifyListeners();
   }
+
+  ///滚动是否完成
+  bool isScrolling = false;
+
 
   ///页面滑动百分比
   double pageSlideProgress = 0.0;
@@ -32,6 +36,7 @@ class PageModel extends ChangeNotifier{
   SlideDirection slideDirection;
 
   setDirection(SlideDirection direction){
+    debugPrint('direction   : $direction');
     slideDirection = direction;
     notifyListeners();
   }
