@@ -116,9 +116,7 @@ class AvatarWidgetState extends State<AvatarWidget> with TickerProviderStateMixi
       if(_pageModel.slideDirection == SlideDirection.Left){
         return (singleBlockWidth - normalSize/2) - getLeftDValue();
       }else{
-        double i = (singleBlockWidth - normalSize/2) + getLeftDValue();
-        debugPrint('$index ----- $i');
-        return  i;
+        return  (singleBlockWidth - normalSize/2) + getLeftDValue();
       }
     }else if(index == (_pageModel.currentIndex + 1)){
       ///中间右1
@@ -141,9 +139,9 @@ class AvatarWidgetState extends State<AvatarWidget> with TickerProviderStateMixi
       }
     }else if(index < (_pageModel.currentIndex - 2)){
       if(_pageModel.slideDirection == SlideDirection.Left){
-        return (singleBlockWidth * (index-_pageModel.currentIndex-2))-normalSize/2 - getLeftDValue();
+        return (singleBlockWidth * (index-_pageModel.currentIndex+2))-normalSize/2 - getLeftDValue();
       }else{
-        return (singleBlockWidth * (index-_pageModel.currentIndex-2))-normalSize/2 + getLeftDValue();
+        return (singleBlockWidth * (index-_pageModel.currentIndex+2))-normalSize/2 + getLeftDValue();
       }
     }else{
       if(_pageModel.slideDirection == SlideDirection.Left){
@@ -159,9 +157,7 @@ class AvatarWidgetState extends State<AvatarWidget> with TickerProviderStateMixi
       if(_pageModel.slideDirection == SlideDirection.Left){
         return singleBlockWidth * _pageModel.pageSlideProgress;
       }else{
-        double v = (singleBlockWidth - biggerSize/2) * _pageModel.pageSlideProgress;
-        debugPrint('$index ---- $v');
-        return v;
+        return (singleBlockWidth - biggerSize/2 + normalSize/2) * _pageModel.pageSlideProgress;
       }
     }else if(index == _pageModel.currentIndex + 1){
       if(_pageModel.slideDirection == SlideDirection.Left){
@@ -170,9 +166,19 @@ class AvatarWidgetState extends State<AvatarWidget> with TickerProviderStateMixi
         return singleBlockWidth * _pageModel.pageSlideProgress;
       }
     }else if(index == _pageModel.currentIndex){
-      return (singleBlockWidth - normalSize/2) * _pageModel.pageSlideProgress;
+      if(_pageModel.slideDirection == SlideDirection.Left){
+        return (singleBlockWidth - normalSize/2) * _pageModel.pageSlideProgress;
+      }else{
+        return (singleBlockWidth + biggerSize/2 - normalSize/2) * _pageModel.pageSlideProgress;
+      }
     }
     return singleBlockWidth * _pageModel.pageSlideProgress;
+//    if(_pageModel.slideDirection == SlideDirection.Left){
+//      return singleBlockWidth * _pageModel.pageSlideProgress;
+//    }else{
+//      return (singleBlockWidth + normalSize/2) * _pageModel.pageSlideProgress;
+//    }
+
   }
 
   double getTop(){
