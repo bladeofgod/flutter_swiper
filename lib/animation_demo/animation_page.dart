@@ -40,6 +40,8 @@ class AnimationDrivePageState extends State<AnimationDrivePage>{
     pageController = PageController(viewportFraction:0.9 ,initialPage: 5);
   }
 
+  int genNum = 30;
+
   @override
   Widget build(BuildContext context) {
 
@@ -58,7 +60,7 @@ class AnimationDrivePageState extends State<AnimationDrivePage>{
               color: Colors.grey,
               child: Stack(
                 children: <Widget>[
-                  ...List.generate(10, (index){
+                  ...List.generate(genNum, (index){
                     return AvatarWidget(Size(size.width,260), 70, 140,index % 2 == 0 ?  Colors.red : Colors.yellow,index);
                   }).toList(),
                 ],
@@ -76,7 +78,7 @@ class AnimationDrivePageState extends State<AnimationDrivePage>{
                   onPageChanged: (index){
                     tempIndex = index;
                   },
-                  children: List.generate(10, (index){
+                  children: List.generate(genNum, (index){
                     return Container(
                       margin: EdgeInsets.symmetric(horizontal: 20),
                       width: size.width,height: size.height-320,
