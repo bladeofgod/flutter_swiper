@@ -116,7 +116,9 @@ class AvatarWidgetState extends State<AvatarWidget> with TickerProviderStateMixi
       if(_pageModel.slideDirection == SlideDirection.Left){
         return (singleBlockWidth - normalSize/2) - getLeftDValue();
       }else{
-        return (singleBlockWidth - normalSize/2) + getLeftDValue();
+        double i = (singleBlockWidth - normalSize/2) + getLeftDValue();
+        debugPrint('$index ----- $i');
+        return  i;
       }
     }else if(index == (_pageModel.currentIndex + 1)){
       ///中间右1
@@ -157,7 +159,9 @@ class AvatarWidgetState extends State<AvatarWidget> with TickerProviderStateMixi
       if(_pageModel.slideDirection == SlideDirection.Left){
         return singleBlockWidth * _pageModel.pageSlideProgress;
       }else{
-        return (singleBlockWidth - biggerSize/2) * _pageModel.pageSlideProgress;
+        double v = (singleBlockWidth - biggerSize/2) * _pageModel.pageSlideProgress;
+        debugPrint('$index ---- $v');
+        return v;
       }
     }else if(index == _pageModel.currentIndex + 1){
       if(_pageModel.slideDirection == SlideDirection.Left){

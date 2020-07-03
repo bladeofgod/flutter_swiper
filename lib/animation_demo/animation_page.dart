@@ -120,11 +120,12 @@ class AnimationDrivePageState extends State<AnimationDrivePage>{
 
 //          debugPrint('demension ${notification.metrics.viewportDimension}');
 //          debugPrint('  -----${ notification.metrics.maxScrollExtent/10}');
-          lastPosition += notification.scrollDelta;
-          debugPrint('------------${lastPosition}');
+          ///右滑动时 为负值
+          lastPosition += notification.scrollDelta.abs();
+          debugPrint('pos------------${lastPosition}');
 
           double progress = (lastPosition/ singleWidth).clamp(0.0,1.0);
-          //debugPrint('$progress');
+          debugPrint('progress  : $progress');
           pageModel.setSlideProgress(progress);
 
         }
